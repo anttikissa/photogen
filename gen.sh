@@ -1,4 +1,13 @@
 #!/bin/bash
+# 
+# gen.sh -- generate photos.json from images in current directory.
+#
+# Usage: ./gen.sh
+#
+# Will overwrite photos.json without warning.
+#
+# Currently only images named *.jpg are supported.
+#
 
 if ! which exiv2 2>&1 >/dev/null
 then
