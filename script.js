@@ -52,6 +52,20 @@ function init() {
 		fullscreen();
 	};
 
+	/*
+	window.onpopstate = function(e) {
+		if (window.location.hash[0] == '#') {
+			idxStr = window.location.hash.replace('#', '')
+			var idx = parseInt(idxStr);
+			if (!isNaN(idx)) {
+				current = idx - 1;
+				console.log("New index: " + current);
+				updateImage();
+			}
+		}
+	}
+	*/
+
 	current = 0;
 	updateImage();
 }
@@ -63,6 +77,7 @@ function updateImage() {
 	$('.title').innerHTML = photo.file + ' (' + pos + ')';
 	$('.metadata').innerHTML = photo.date;
 
+//	window.history.pushState(null, null, '#' + (current + 1));
 	preloadNext();
 }
 
