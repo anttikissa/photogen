@@ -21,15 +21,15 @@ window.onload = function() {
 				photos = JSON.parse(result.responseText);
 			}
 			catch (err) {
-				console.log("Error parsing photos.json", err);
 				alert("Could not parse photos.json");
+				console.log("Error parsing photos.json", err);
 			}
 			sanitizeMetadata();
 			init();
 		},
 		function (err) {
-			console.log("Error loading photos.json", err);
 			alert("Could not load photos.json");
+			console.log("Error loading photos.json", err);
 		}
 	);
 };
@@ -38,6 +38,18 @@ function sanitizeMetadata() {
 	photos.forEach(function(photo) {
 		photo.date = photo.date.replace(':', '-').replace(':', '-');
 	});
+}
+
+// Attempt to make sense of location.hash.
+// If it's a number in the range [1, photos.length], return it,
+// otherwise return null.
+function parseHash() {
+	var idxStr = window.location.hash.replace('#', '')
+	var idx = parseInt(idxStr);
+	idx = Math.max(0, idx);
+	idx = Math.min(idx, photos.length - 1);
+
+	return isNaN(idx) ? null : idx;
 }
 
 function init() {
@@ -52,32 +64,43 @@ function init() {
 		fullscreen();
 	};
 
-	/*
 	window.onpopstate = function(e) {
-		if (window.location.hash[0] == '#') {
-			idxStr = window.location.hash.replace('#', '')
-			var idx = parseInt(idxStr);
-			if (!isNaN(idx)) {
-				current = idx - 1;
-				console.log("New index: " + current);
-				updateImage();
-			}
+		var idx = parseHash();
+		if (idx) {
+			current = idx - 1;
+			updateImage({ pushState: false });
 		}
 	}
-	*/
 
-	current = 0;
-	updateImage();
+	var idx = parseHash();
+	if (idx) {
+		current = idx - 1;
+	} else {
+		current = 0;
+	}
+
+	updateImage({ pushState: false });
 }
 
-function updateImage() {
+function updateImage(opts) {
+	opts = opts || {};
+	if (typeof opts.pushState === 'undefined') {
+		opts.pushState = true;
+	}
+
 	var photo = photos[current];
 	pos = (current + 1) + ' / ' + photos.length;
+	var name = photo.file + ' (' + pos + ')'
 	$('img').src = photo.file;
-	$('.title').innerHTML = photo.file + ' (' + pos + ')';
+	$('.title').innerHTML = name;
 	$('.metadata').innerHTML = photo.date;
+	var oneBasedIdx = current + 1;
 
-//	window.history.pushState(null, null, '#' + (current + 1));
+	if (opts.pushState) {
+		window.history.pushState(null, document.title, '#' + oneBasedIdx);
+	}
+	document.title = name;
+
 	preloadNext();
 }
 
@@ -86,7 +109,6 @@ function preloadNext() {
 	var i;
 	for (i = 0; i < howMany; i++) {
 		(function(i) {
-			console.log("preloading image " + i);
 			setTimeout(function() {
 				var next = Math.min(current + i + 1, photos.length - 1);
 				var img = new Image();
@@ -97,13 +119,13 @@ function preloadNext() {
 }
 
 function next() {
-	console.log("next");
+//	console.log("next");
 	current = Math.min(current + 1, photos.length - 1);
 	updateImage();
 }
 
 function prev() {
-	console.log("prev");
+//	console.log("prev");
 	current = Math.max(current - 1, 0);
 	updateImage();
 }
@@ -119,7 +141,6 @@ document.onkeyup = function(e) {
 			asIfClicked($('.next'));
 			break;
 	}
-	console.log("keyup", e.keyCode);
 }
 
 function asIfClicked(el) {
@@ -127,5 +148,5 @@ function asIfClicked(el) {
 	setTimeout(function() {
 		classes(el).remove('active');
 	}, 100);
-	console.log(el);
+//	console.log(el);
 }
