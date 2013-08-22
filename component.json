@@ -1,8 +1,9 @@
 {
-	"name": "my-app",
-	"dependencies": {
-		"matthewp/xhr": "*",
-		"component/keyname": "*",
-		"component/classes": "*"
-	}
+  "name": "my-app",
+  "dependencies": {
+    "matthewp/xhr": "*",
+    "component/keyname": "*",
+    "component/classes": "*",
+    "component/fullscreen": "*"
+  }
 }

@@ -11,11 +11,11 @@ body {
 	font: 16px/20px "Helvetica Neue", Arial, Helvetica, sans-serif;
 	font-weight: 300;
 
-	padding: 100px 20px;
+	padding: 80px 20px;
 }
 
 h1 {
-	font-weight: 300;
+	font-weight: 500;
 }
 
 header, footer {
@@ -26,7 +26,7 @@ header, footer {
 }
 
 header {
-	top: 40px;
+	top: 20px;
 }
 
 .title, .metadata {
@@ -44,7 +44,7 @@ img {
 }
 
 footer {
-	bottom: 40px;
+	bottom: 20px;
 }
 
 button {

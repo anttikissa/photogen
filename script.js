@@ -1,6 +1,7 @@
-xhr = require('matthewp-xhr');
-keyname = require('component-keyname');
-classes = require('component-classes');
+var xhr = require('matthewp-xhr');
+var keyname = require('component-keyname');
+var classes = require('component-classes');
+var fullscreen = require('component-fullscreen');
 
 // my mini-jquery
 function $(s) {
@@ -40,14 +41,19 @@ function init() {
 	$('.prev').onclick = prev;
 	$('.next').onclick = next;
 
+	$('img').onclick = function() {
+		fullscreen();
+	};
+
 	current = 0;
 	updateImage();
 }
 
 function updateImage() {
 	var photo = photos[current];
+	pos = (current + 1) + ' / ' + photos.length;
 	$('img').src = photo.file;
-	$('.title').innerHTML = photo.file;
+	$('.title').innerHTML = photo.file + ' (' + pos + ')';
 }
 
 function next() {

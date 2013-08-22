@@ -532,6 +532,254 @@ ClassList.prototype.contains = function(name){
 };
 
 });
+require.register("component-emitter/index.js", function(exports, require, module){
+
+/**
+ * Module dependencies.
+ */
+
+var index = require('indexof');
+
+/**
+ * Expose `Emitter`.
+ */
+
+module.exports = Emitter;
+
+/**
+ * Initialize a new `Emitter`.
+ *
+ * @api public
+ */
+
+function Emitter(obj) {
+  if (obj) return mixin(obj);
+};
+
+/**
+ * Mixin the emitter properties.
+ *
+ * @param {Object} obj
+ * @return {Object}
+ * @api private
+ */
+
+function mixin(obj) {
+  for (var key in Emitter.prototype) {
+    obj[key] = Emitter.prototype[key];
+  }
+  return obj;
+}
+
+/**
+ * Listen on the given `event` with `fn`.
+ *
+ * @param {String} event
+ * @param {Function} fn
+ * @return {Emitter}
+ * @api public
+ */
+
+Emitter.prototype.on = function(event, fn){
+  this._callbacks = this._callbacks || {};
+  (this._callbacks[event] = this._callbacks[event] || [])
+    .push(fn);
+  return this;
+};
+
+/**
+ * Adds an `event` listener that will be invoked a single
+ * time then automatically removed.
+ *
+ * @param {String} event
+ * @param {Function} fn
+ * @return {Emitter}
+ * @api public
+ */
+
+Emitter.prototype.once = function(event, fn){
+  var self = this;
+  this._callbacks = this._callbacks || {};
+
+  function on() {
+    self.off(event, on);
+    fn.apply(this, arguments);
+  }
+
+  fn._off = on;
+  this.on(event, on);
+  return this;
+};
+
+/**
+ * Remove the given callback for `event` or all
+ * registered callbacks.
+ *
+ * @param {String} event
+ * @param {Function} fn
+ * @return {Emitter}
+ * @api public
+ */
+
+Emitter.prototype.off =
+Emitter.prototype.removeListener =
+Emitter.prototype.removeAllListeners = function(event, fn){
+  this._callbacks = this._callbacks || {};
+
+  // all
+  if (0 == arguments.length) {
+    this._callbacks = {};
+    return this;
+  }
+
+  // specific event
+  var callbacks = this._callbacks[event];
+  if (!callbacks) return this;
+
+  // remove all handlers
+  if (1 == arguments.length) {
+    delete this._callbacks[event];
+    return this;
+  }
+
+  // remove specific handler
+  var i = index(callbacks, fn._off || fn);
+  if (~i) callbacks.splice(i, 1);
+  return this;
+};
+
+/**
+ * Emit `event` with the given args.
+ *
+ * @param {String} event
+ * @param {Mixed} ...
+ * @return {Emitter}
+ */
+
+Emitter.prototype.emit = function(event){
+  this._callbacks = this._callbacks || {};
+  var args = [].slice.call(arguments, 1)
+    , callbacks = this._callbacks[event];
+
+  if (callbacks) {
+    callbacks = callbacks.slice(0);
+    for (var i = 0, len = callbacks.length; i < len; ++i) {
+      callbacks[i].apply(this, args);
+    }
+  }
+
+  return this;
+};
+
+/**
+ * Return array of callbacks for `event`.
+ *
+ * @param {String} event
+ * @return {Array}
+ * @api public
+ */
+
+Emitter.prototype.listeners = function(event){
+  this._callbacks = this._callbacks || {};
+  return this._callbacks[event] || [];
+};
+
+/**
+ * Check if this emitter has `event` handlers.
+ *
+ * @param {String} event
+ * @return {Boolean}
+ * @api public
+ */
+
+Emitter.prototype.hasListeners = function(event){
+  return !! this.listeners(event).length;
+};
+
+});
+require.register("component-fullscreen/index.js", function(exports, require, module){
+
+/**
+ * Module dependencies.
+ */
+
+var Emitter = require('emitter');
+
+/**
+ * Expose `fullscreen()`.
+ */
+
+exports = module.exports = fullscreen;
+
+/**
+ * Mixin emitter.
+ */
+
+Emitter(exports);
+
+/**
+ * document element.
+ */
+
+var element = document.documentElement;
+
+/**
+ * fullscreen supported flag.
+ */
+
+exports.supported = !!(element.requestFullscreen
+  || element.webkitRequestFullscreen
+  || element.mozRequestFullScreen);
+
+/**
+ * Enter fullscreen mode for `el`.
+ *
+ * @param {Element} [el]
+ * @api public
+ */
+
+function fullscreen(el){
+  el = el || element;
+  if (el.requestFullscreen) return el.requestFullscreen();
+  if (el.mozRequestFullScreen) return el.mozRequestFullScreen();
+  if (el.webkitRequestFullscreen) return el.webkitRequestFullscreen();
+}
+
+/**
+ * Exit fullscreen.
+ *
+ * @api public
+ */
+
+exports.exit = function(){
+  var doc = document;
+  if (doc.exitFullscreen) return doc.exitFullscreen();
+  if (doc.mozCancelFullScreen) return doc.mozCancelFullScreen();
+  if (doc.webkitCancelFullScreen) return doc.webkitCancelFullScreen();
+};
+
+/**
+ * Change handler function.
+ */
+
+function change(prop) {
+  return function(){
+    var val = document[prop];
+    exports.emit('change', val);
+  }
+}
+
+/**
+ * Handle events.
+ */
+
+if (document.addEventListener) {
+  document.addEventListener('fullscreenchange', change('fullscreen'));
+  document.addEventListener('mozfullscreenchange', change('mozFullScreen'));
+  document.addEventListener('webkitfullscreenchange', change('webkitIsFullScreen'));
+}
+
+});
 require.alias("matthewp-xhr/index.js", "my-app/deps/xhr/index.js");
 require.alias("matthewp-xhr/index.js", "my-app/deps/xhr/index.js");
 require.alias("matthewp-xhr/index.js", "xhr/index.js");
@@ -553,4 +801,9 @@ require.alias("component-keyname/index.js", "keyname/index.js");
 require.alias("component-classes/index.js", "my-app/deps/classes/index.js");
 require.alias("component-classes/index.js", "classes/index.js");
 require.alias("component-indexof/index.js", "component-classes/deps/indexof/index.js");
+
+require.alias("component-fullscreen/index.js", "my-app/deps/fullscreen/index.js");
+require.alias("component-fullscreen/index.js", "fullscreen/index.js");
+require.alias("component-emitter/index.js", "component-fullscreen/deps/emitter/index.js");
+require.alias("component-indexof/index.js", "component-emitter/deps/indexof/index.js");
 
