@@ -24,6 +24,7 @@ window.onload = function() {
 				console.log("Error parsing photos.json", err);
 				alert("Could not parse photos.json");
 			}
+			sanitizeMetadata();
 			init();
 		},
 		function (err) {
@@ -32,6 +33,12 @@ window.onload = function() {
 		}
 	);
 };
+
+function sanitizeMetadata() {
+	photos.forEach(function(photo) {
+		photo.date = photo.date.replace(':', '-').replace(':', '-');
+	});
+}
 
 function init() {
 	if (!photos.length) {
@@ -54,6 +61,7 @@ function updateImage() {
 	pos = (current + 1) + ' / ' + photos.length;
 	$('img').src = photo.file;
 	$('.title').innerHTML = photo.file + ' (' + pos + ')';
+	$('.metadata').innerHTML = photo.date;
 }
 
 function next() {

@@ -36,7 +36,9 @@ do
 		output ","
 	fi
 
-	output -en '\t{ "file": "'$x'" }'
+	date=`exiv2 -pt $x | grep Exif.Photo.DateTimeOriginal | sed -e 's/.*\([0-9]\{4\}.*\)/\1/g'`
+	# TODO fix funny date format here and not later
+	output -en '\t{ "file": "'$x'", "date": "'$date'" }'
 
 #	if (( $first ))
 #		then echo
