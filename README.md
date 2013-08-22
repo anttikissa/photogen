@@ -15,11 +15,11 @@ Installation & usage
 
 1. Clone this repository somewhere, say into `~/photogen`.
 
-2. cd where/ever/photos/are
+2. `cd where/ever/photos/are`
 
 3. Run `~/photogen/gen.sh`.  This will generate `photos.json` in the current directory.
 
-4. Run `~/phototen/install.sh`.  This will install files `index.html`, `script.js`, `build/build.js`, and `style.css` into the current directory.
+4. Run `~/photogen/install.sh`.  This will install files `index.html`, `script.js`, `build/build.js`, and `style.css` into the current directory.
 
 5. That's it!
 
