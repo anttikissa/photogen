@@ -46,8 +46,8 @@ function sanitizeMetadata() {
 function parseHash() {
 	var idxStr = window.location.hash.replace('#', '')
 	var idx = parseInt(idxStr);
-	idx = Math.max(0, idx);
-	idx = Math.min(idx, photos.length - 1);
+	idx = Math.max(1, idx);
+	idx = Math.min(idx, photos.length);
 
 	return isNaN(idx) ? null : idx;
 }
