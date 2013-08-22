@@ -62,6 +62,23 @@ function updateImage() {
 	$('img').src = photo.file;
 	$('.title').innerHTML = photo.file + ' (' + pos + ')';
 	$('.metadata').innerHTML = photo.date;
+
+	preloadNext();
+}
+
+function preloadNext() {
+	var howMany = 2;
+	var i;
+	for (i = 0; i < howMany; i++) {
+		(function(i) {
+			console.log("preloading image " + i);
+			setTimeout(function() {
+				var next = Math.min(current + i + 1, photos.length - 1);
+				var img = new Image();
+				img.src = photos[next].file;
+			}, i * 200);
+		})(i);
+	}
 }
 
 function next() {
