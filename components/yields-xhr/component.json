@@ -1,0 +1,17 @@
+{
+  "name": "xhr",
+  "repo": "yields/xhr",
+  "description": "Cross-browser XMLHttpRequest",
+  "version": "1.0.0",
+  "keywords": [
+    "xhr",
+    "XMLHttpRequest",
+    "ActiveXObject"
+  ],
+  "dependencies": {},
+  "development": {},
+  "license": "MIT",
+  "scripts": [
+    "index.js"
+  ]
+}

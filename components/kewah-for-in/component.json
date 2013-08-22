@@ -1,0 +1,17 @@
+{
+  "name": "for-in",
+  "repo": "kewah/for-in",
+  "description": "Iterate an object",
+  "version": "0.0.1",
+  "keywords": [
+    "forIn",
+    "object",
+    "iterator"
+  ],
+  "dependencies": {},
+  "development": {},
+  "license": "MIT",
+  "scripts": [
+    "index.js"
+  ]
+}

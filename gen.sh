@@ -9,7 +9,7 @@
 # Currently only images named *.jpg are supported.
 #
 
-if ! which exiv2 2>&1 >/dev/null
+if ! which exiv2 >/dev/null 2>&1 
 then
 	echo 'Please install exiv2 before proceeding.'
 	exit
@@ -36,7 +36,7 @@ do
 		output ","
 	fi
 
-	output -en '\t{ file: "'$x'" }'
+	output -en '\t{ "file": "'$x'" }'
 
 #	if (( $first ))
 #		then echo
