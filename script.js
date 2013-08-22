@@ -1,5 +1,6 @@
 xhr = require('matthewp-xhr');
 keyname = require('component-keyname');
+classes = require('component-classes');
 
 // my mini-jquery
 function $(s) {
@@ -65,11 +66,20 @@ document.onkeyup = function(e) {
 	switch (keyname(e.keyCode)) {
 		case 'left':
 			$('.prev').click();
+			asIfClicked($('.prev'));
 			break;
 		case 'right':
 			$('.next').click();
+			asIfClicked($('.next'));
 			break;
 	}
 	console.log("keyup", e.keyCode);
 }
 
+function asIfClicked(el) {
+	classes(el).add('active');
+	setTimeout(function() {
+		classes(el).remove('active');
+	}, 100);
+	console.log(el);
+}
