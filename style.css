@@ -29,6 +29,9 @@ header {
 	top: 40px;
 }
 
+.title, .metadata {
+	height: 20px;
+}
 .image {
 	height: 100%;
 	text-align: center;

@@ -1,4 +1,5 @@
 xhr = require('matthewp-xhr');
+keyname = require('component-keyname');
 
 // my mini-jquery
 function $(s) {
@@ -35,35 +36,40 @@ function init() {
 		alert("No photos to show");
 	}
 
-	current = 0;
-
-	$('img').src = photos[current].file;
-
 	$('.prev').onclick = prev;
 	$('.next').onclick = next;
 
-//	photos.forEach(function(photo) {
-//		console.log("Got photo ", photo);
-//	});
+	current = 0;
+	updateImage();
 }
 
 function updateImage() {
-	$('img').src = photos[current].file;
+	var photo = photos[current];
+	$('img').src = photo.file;
+	$('.title').innerHTML = photo.file;
 }
 
 function next() {
 	console.log("next");
-	current++;
+	current = Math.min(current + 1, photos.length - 1);
 	updateImage();
 }
 
 function prev() {
 	console.log("prev");
-	current--;
+	current = Math.max(current - 1, 0);
 	updateImage();
 }
 
 document.onkeyup = function(e) {
-	console.log("keyup", e);
+	switch (keyname(e.keyCode)) {
+		case 'left':
+			$('.prev').click();
+			break;
+		case 'right':
+			$('.next').click();
+			break;
+	}
+	console.log("keyup", e.keyCode);
 }
 
